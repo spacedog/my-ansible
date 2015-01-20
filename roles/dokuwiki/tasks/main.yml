@@ -1,0 +1,21 @@
+---
+- name: install epel repository
+  yum:
+    name={{epel}}
+    state=present
+  notify: yum make cache
+  register: install_result
+
+- name: hack proxy
+  replace:
+    backup=yes
+    dest=/etc/yum.repos.d/epel.repo
+    regexp=https
+    replace=http
+  when: install_result|success
+
+- name: install dokuwiki
+  yum:
+    name=dokuwiki
+    state=present
+  when: install_result|success
