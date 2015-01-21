@@ -19,3 +19,16 @@
     name=dokuwiki
     state=present
   when: install_result|success
+
+- name: remove welcome module
+  file:
+    path=/etc/httpd/conf.d/welcome.conf
+    state=absent
+  when: install_result|success
+
+- name: stoped apache service
+  service:
+    name=httpd
+    state=stopped
+    enabled=no
+  when: install_result|success
